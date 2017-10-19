@@ -24,8 +24,8 @@
         <div class="ibox float-e-margins">
             <div class="ibox-content" style='padding:0px'>
                 <div class="jqGrid_wrapper">
-                    <table id="floor"></table>
-                    <div id="floorPager"></div>
+                    <table id="meals_type"></table>
+                    <div id="meals_type_pager"></div>
                     <div id="search"></div>
                 </div>
             </div>
@@ -36,20 +36,26 @@
             <div class="modal-content animated bounceInRight">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>修改楼层</h5>
+                            <h5>修改菜品分类</h5>
                         </div>
                         <div class="ibox-content">
                             <form class="form-horizontal m-t" id="editForm" onsubmit="return false;">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">楼层名称:</label>
+                                    <label class="col-sm-3 control-label">分类名:</label>
                                     <div class="col-sm-8">
                                         <input name="name" class="form-control" type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">楼层描述：</label>
+                                    <label class="col-sm-3 control-label">分类编号:</label>
                                     <div class="col-sm-8">
-                                        <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
+                                        <input name="code" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">修改图片:</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="type_img" id="">
                                     </div>
                                 </div>
                                 <input type="hidden" name="id">    
@@ -69,20 +75,26 @@
             <div class="modal-content animated bounceInRight">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>添加楼层</h5>
+                            <h5>添加菜品分类</h5>
                         </div>
                         <div class="ibox-content">
                             <form class="form-horizontal m-t" id="addForm" onsubmit="return false;">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">楼层名称:</label>
+                                    <label class="col-sm-3 control-label">分类名:</label>
                                     <div class="col-sm-8">
                                         <input name="name" class="form-control" type="text">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">楼层描述：</label>
+                                    <label class="col-sm-3 control-label">分类编号:</label>
                                     <div class="col-sm-8">
-                                        <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
+                                        <input name="code" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">上传图片:</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="type_img" id="">
                                     </div>
                                 </div>
                                 <input type="reset" value="" class='reset' style='display:none'>
@@ -106,7 +118,7 @@
     <!-- jqGrid table表格-->
     <script src="__JS__/plugins/jqgrid/i18n/grid.locale-cn.js?0820"></script>
     <script src="__JS__/plugins/jqgrid/jquery.jqGrid.min.js?0820"></script> 
-    <script type="text/javascript" src="__JS__/order/floor.js"></script>   
+    <script type="text/javascript" src="__JS__/order/meals_type.js"></script>   
     <script type="text/javascript" src="__JS__/order/common.js"></script>
     <!-- Sweet alert 模态框js-->
     <script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>

@@ -4,16 +4,17 @@ $(function () {
         var h = document.documentElement.clientHeight || document.body.clientHeight;
         var jq_data = new Object();
         // 初始化jqGrid实时数据表格
-        $('#floor').jqGrid({
+        $('#meals_type').jqGrid({
             data: [],
             datatype: "local",
             shrinkToFit: true,
             //列名称
-            colNames:['楼层名','描述',''],
+            colNames:['名称','编号','图片',''],
             // 常用到的属性
             colModel:[
                 {name:'name'},
-                {name:'description'}, 
+                {name:'code'}, 
+                {name:'img_url'},
                 {name:'id',hidden:true},
             ],
             multiselect: true,              //添加多选框
@@ -21,7 +22,7 @@ $(function () {
             loadonce:true,
             rowNum : 10,                    // 默认的每页显示记录条数  
             rowList : [10, 20, 30],         // 可供用户选择的每页显示记录条数。  
-            pager : '#floorPager',         // 导航条对应的Div标签的ID,注意一定是DIV，不是Table  
+            pager : '#meals_type_pager',         // 导航条对应的Div标签的ID,注意一定是DIV，不是Table  
             sortname : 'SYS_RES_ID',        // 默认的查询排序字段  
             viewrecords : true,             // 定义是否在导航条上显示总的记录数  
             autowidth : true,               //定义表格是否自适应宽度
@@ -36,7 +37,7 @@ $(function () {
             },
         });
         //加载工具栏，并且隐藏之前页面定义的按钮
-        $("#floor").jqGrid('navGrid', '#floorPager', {
+        $("#meals_type").jqGrid('navGrid', '#meals_type_pager', {
             edit: false,
             add: false,
             del: false,
@@ -46,34 +47,34 @@ $(function () {
             reloadAfterSubmit: true
         });
         // 修改按钮
-        $("#floor").navButtonAdd('#floorPager',
+        $("#meals_type").navButtonAdd('#meals_type_pager',
         {
             caption: "修改",
             buttonicon: "glyphicon glyphicon-edit",
             onClickButton: function(){
                 // 获取页面上多选框选中之后返回的id数组
-                var ids = $("#floor").jqGrid("getGridParam","selarrrow");
+                var ids = $("#meals_type").jqGrid("getGridParam","selarrrow");
                 // 调用修改的方法
                 openEditModal(ids);
             },
             position: "first"
         });
         //删除按钮
-        $("#floor").navButtonAdd('#floorPager',
+        $("#meals_type").navButtonAdd('#meals_type_pager',
         {
             caption: "删除",
             buttonicon: "ui-icon glyphicon glyphicon-trash",
             // 删除按钮绑定事件
             onClickButton: function () {
                 // 获取页面上多选框选中之后返回的id数组
-                var ids = $("#floor").jqGrid("getGridParam","selarrrow");
+                var ids = $("#meals_type").jqGrid("getGridParam","selarrrow");
                 // 回调删除的方法
                 del(ids);
             },
             position: "first"
         });
         // 添加按钮
-        $("#floor").navButtonAdd('#floorPager',
+        $("#meals_type").navButtonAdd('#meals_type_pager',
         {
             caption: "添加",
             buttonicon: "ui-icon glyphicon glyphicon-plus",
@@ -85,11 +86,11 @@ $(function () {
         });
         // ajax请求初始化数据数据对jqgrid进行数据渲染
         function get_jqgrid () {
-            async('../Floor/jqgrid_all','post','',function (data) {
+            async('../meals_type/jqgrid_all','post','',function (data) {
                 if (data.code == 0) {
                     jq_data = data.message;
-                    $("#floor").jqGrid('clearGridData');  //清空表格
-                    $("#floor").jqGrid('setGridParam',{  // 重新加载数据
+                    $("#meals_type").jqGrid('clearGridData');  //清空表格
+                    $("#meals_type").jqGrid('setGridParam',{  // 重新加载数据
                         datatype:'local',
                         data :jq_data, 
                     }).trigger("reloadGrid");
@@ -112,13 +113,12 @@ $(function () {
                 });
             } else {
                 //获取某一行的数据，并且进行赋值
-                var getIdRow = $("#floor").jqGrid("getRowData",ids);
+                var getIdRow = $("#meals_type").jqGrid("getRowData",ids);
                 console.log(getIdRow);
                 $('#editModal').modal('show');
                 $("#editForm input[name='name']").val(getIdRow.name);
                 $("#editForm input[name='id']").val(getIdRow.id);
-                $("#editForm input[name='address']").val(getIdRow.address);
-                $("#editForm textarea[name='description']").val(getIdRow.description);
+                $("#editForm input[name='code']").val(getIdRow.code);
                 $("#editButton").click(function () {
                     $("#editForm").submit();
                 });
@@ -128,20 +128,20 @@ $(function () {
                     onkeyup :false,// 是否在敲击键盘时验证 
                     rules: {
                         code: "required",
-                        floor_id: "required",
-                        floor_id: "required",
+                        meals_type_id: "required",
+                        meals_type_id: "required",
                     },
                     messages:{
                         code:"窗口号不能为空",
-                        floor_id:"餐厅不能为空",
-                        floor_id:'楼层不能为空'
+                        meals_type_id:"餐厅不能为空",
+                        meals_type_id:'楼层不能为空'
                     },
                     submitHandler:function () {
                         // 表单提交之前进行序列化
                         var formData = $('#editForm').serialize();
                         console.log(formData);
                         // 初始化楼层下拉框内容
-                        async('../Floor/update','post',formData,function (data) {
+                        async('../meals_type/update','post',formData,function (data) {
                             var message = data.message;
                             if (data.code == 0) {
                                 swal({
@@ -194,7 +194,7 @@ $(function () {
                         idStr += obj+',';
                     })
                     console.log(idStr);
-                    async('../Floor/delete','post',{ids:idStr},function (data) {
+                    async('../meals_type/delete','post',{ids:idStr},function (data) {
                         var message = data.message;
                         if (data.code == 0) {
                             swal("删除成功！", "您已经永久删除了这条信息。", "success");
@@ -219,15 +219,17 @@ $(function () {
                 onkeyup :false,// 是否在敲击键盘时验证 
                 rules: {
                     name: "required",
+                    code: "required"
                 },
                 messages:{
                     name:"名称不能为空",
+                    code:"编号不能为空"
                 },
                 submitHandler:function () {
                     // 表单提交之前进行序列化
                     var formData = $('#addForm').serialize();
                     console.log(formData);
-                    async('../Floor/add','post',formData,function (data) {
+                    async('../meals_type/add','post',formData,function (data) {
                         var message = data.message;
                         if (data.code == 0) {
                             swal({
