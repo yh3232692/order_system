@@ -11,7 +11,7 @@
         'view_replace_str'       => [
             '__CSS__'       =>  '/order_system/public/static/admin/css',
             '__JS__'        =>  '/order_system/public/static/admin/js',
-            '__UPLOAD__'    =>  '/order_system/public/static/admin/upload',
+            '__UPLOAD__'    =>  '/order_system/public/static/upload',
         ],
         
     ];

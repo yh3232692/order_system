@@ -210,6 +210,7 @@ $(function () {
         // 执行添加操作
         function openAddModal () {
             $('#addModal').modal('show');
+            load_upload();
             $("#addButton").click(function () {
                 $("#addForm").submit();
             });
@@ -258,5 +259,67 @@ $(function () {
         $('#addModal').on('hide.bs.modal',function(){
             $('#addButton').unbind('click');
         });
+
+
+
+        function load_upload () {
+            var $image = $(".image-crop > img");
+            $image.cropper({
+                aspectRatio: 4/3,
+                preview: ".img-preview",
+                done: function(data) {
+                },
+            });
+            var $inputImage = $("#inputImage");
+            if (window.FileReader) {
+                $inputImage.change(function () {
+                    var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+        
+                    if (!files.length) {
+                        return;
+                    }
+        
+                    file = files[0];
+        
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $inputImage.val("");
+                            $image.cropper("reset", true).cropper("replace", this.result);
+                        };
+                    } else {
+                        showMessage("请选择图片文件");
+                    }
+                });
+            } else {
+                $inputImage.addClass("hide");
+            }
+            $("#download").click(function () {
+                let data_url = $image.cropper('getCroppedCanvas')[0];
+                console.log(data_url.getAttribute('src'));
+            });
+            
+            $("#zoomIn").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
+        
+            $("#zoomOut").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+        
+            $("#rotateLeft").click(function () {
+                $image.cropper("rotate", 45);
+            });
+        
+            $("#rotateRight").click(function () {
+                $image.cropper("rotate", -45);
+            });
+        
+            $("#setDrag").click(function () {
+                $image.cropper("setDragMode", "crop");
+            });
+        }
     })();
 });
