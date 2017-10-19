@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>点餐</title>
+    <meta name="keywords" content="点餐">
+    <meta name="description" content="点餐">
+    <link rel="shortcut icon" href=""> 
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__CSS__/animate.css" rel="stylesheet">
+    <link href="__CSS__/style.css?v=4.1.0" rel="stylesheet">
+    <link href="__CSS__/plugins/jqgrid/ui.jqgrid.css?0820" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script>
+        var base_url = '__APP__/';
+    </script>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content  animated fadeInRight" style='padding:0px'>
+        <div class="ibox float-e-margins">
+            <div class="ibox-title row">
+                <form action="" id='choose_form' onsubmit="return false;">
+                    <div class="row col-sm-5 form-group">
+                        <label class="col-sm-3 control-label " style='align:center'>选择餐厅：</label>
+                        <div class="col-sm-9">
+                            <select  name="dinner_id" id='choose_dinner' class="form-control">
+                                <option value="0">所有餐厅</option>                                              
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row col-sm-5 form-group">
+                        <label class="col-sm-3 control-label " style='align:center'>选择楼层：</label>
+                        <div class="col-sm-9">
+                            <select  name="floor_id" id='choose_floor' class="form-control">
+                                <option value="0">所有楼层</option>              
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row col-sm-2">
+                        <div class="col-sm-6"></div>
+                        <button type="button" class="btn btn-primary col-sm-4" id="choose_sub">提交</button>
+                    </div>
+                </form>
+            </div>
+            <div class="ibox-content" style='padding:0px'>
+                <div class="jqGrid_wrapper">
+                    <table id="window"></table>
+                    <div id="windowPager"></div>
+                    <div id="search"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>修改窗口</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <form class="form-horizontal m-t" id="editForm" onsubmit="return false;">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">窗口号:</label>
+                                    <div class="col-sm-8">
+                                        <input name="code" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">请选择餐厅:</label>
+                                    <div class="col-sm-8">
+                                        <select name="dinner_id" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">请选择楼层:</label>
+                                    <div class="col-sm-8">
+                                        <select name="floor_id" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">窗口描述：</label>
+                                    <div class="col-sm-8">
+                                        <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="id">    
+                                <input type="hidden" name="ip">                            
+                                <input class="submit" type="submit" value="提交" style="display:none">
+                            </form>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="editButton">修改</button>
+                </div>
+             </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="__JS__/jquery.min.js?v=2.1.4"></script>
+    <script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
+    <!--右侧列表记录-->
+    <script type="text/javascript" src="__JS__/contabs.js"></script>
+    
+    <!-- jqGrid table表格-->
+    <script src="__JS__/plugins/jqgrid/i18n/grid.locale-cn.js?0820"></script>
+    <script src="__JS__/plugins/jqgrid/jquery.jqGrid.min.js?0820"></script> 
+    <script type="text/javascript" src="__JS__/order/window.js"></script>   
+    <script type="text/javascript" src="__JS__/order/common.js"></script>
+    <!-- Sweet alert 模态框js-->
+    <script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="__JS__/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__JS__/plugins/validate/messages_zh.min.js"></script>
+
+    <!-- <script src="__JS__/demo/form-validate-demo.js"></script>        -->
+</body>
+</html>
