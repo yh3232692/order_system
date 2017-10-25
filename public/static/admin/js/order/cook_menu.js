@@ -4,29 +4,33 @@ $(function () {
         var h = document.documentElement.clientHeight || document.body.clientHeight;
         var jq_data = new Object();
         // 初始化jqGrid实时数据表格
-        $('#meals_type').jqGrid({
+        $('#cook_menu').jqGrid({
             data: [],
             datatype: "local",
             shrinkToFit: true,
             //列名称
-            colNames:['名称','编号','图片',''],
+            colNames:['菜名','编号','建议价格','菜品类型','图片','描述','',''],
             // 常用到的属性
             colModel:[
                 {name:'name'},
                 {name:'code'}, 
-                {name:'img_url',align: "center",width:80},
+                {name:'advice_price'},
+                {name:'meals_type_name'},
+                {name:'img_url',align: "center",},
+                {name:'description'},
                 {name:'id',hidden:true},
+                {name:'meals_type_id',hidden:true}
             ],
             multiselect: true,              //添加多选框
             rownumbers : false,             //是否显示行号  
             loadonce:true,
             rowNum : 10,                    // 默认的每页显示记录条数  
             rowList : [10, 20, 30],         // 可供用户选择的每页显示记录条数。  
-            pager : '#meals_type_pager',         // 导航条对应的Div标签的ID,注意一定是DIV，不是Table  
+            pager : '#cook_menu_pager',         // 导航条对应的Div标签的ID,注意一定是DIV，不是Table  
             sortname : 'SYS_RES_ID',        // 默认的查询排序字段  
             viewrecords : true,             // 定义是否在导航条上显示总的记录数  
             autowidth : true,               //定义表格是否自适应宽度
-            caption: "楼层详情展示",      //定义表格的标题
+            caption: "菜单详情展示",      //定义表格的标题
             height:h-150,
             hidegrid: true,                 //定义是否可以显示隐藏表格
             onSelectRow:function (rowid,status) {
@@ -37,7 +41,7 @@ $(function () {
             },
         });
         //加载工具栏，并且隐藏之前页面定义的按钮
-        $("#meals_type").jqGrid('navGrid', '#meals_type_pager', {
+        $("#cook_menu").jqGrid('navGrid', '#cook_menu_pager', {
             edit: false,
             add: false,
             del: false,
@@ -47,34 +51,34 @@ $(function () {
             reloadAfterSubmit: true
         });
         // 修改按钮
-        $("#meals_type").navButtonAdd('#meals_type_pager',
+        $("#cook_menu").navButtonAdd('#cook_menu_pager',
         {
             caption: "修改",
             buttonicon: "glyphicon glyphicon-edit",
             onClickButton: function(){
                 // 获取页面上多选框选中之后返回的id数组
-                var ids = $("#meals_type").jqGrid("getGridParam","selarrrow");
+                var ids = $("#cook_menu").jqGrid("getGridParam","selarrrow");
                 // 调用修改的方法
                 openEditModal(ids);
             },
             position: "first"
         });
         //删除按钮
-        $("#meals_type").navButtonAdd('#meals_type_pager',
+        $("#cook_menu").navButtonAdd('#cook_menu_pager',
         {
             caption: "删除",
             buttonicon: "ui-icon glyphicon glyphicon-trash",
             // 删除按钮绑定事件
             onClickButton: function () {
                 // 获取页面上多选框选中之后返回的id数组
-                var ids = $("#meals_type").jqGrid("getGridParam","selarrrow");
+                var ids = $("#cook_menu").jqGrid("getGridParam","selarrrow");
                 // 回调删除的方法
                 del(ids);
             },
             position: "first"
         });
         // 添加按钮
-        $("#meals_type").navButtonAdd('#meals_type_pager',
+        $("#cook_menu").navButtonAdd('#cook_menu_pager',
         {
             caption: "添加",
             buttonicon: "ui-icon glyphicon glyphicon-plus",
@@ -87,11 +91,11 @@ $(function () {
         
         // ajax请求初始化数据数据对jqgrid进行数据渲染
         function get_jqgrid () {
-            async('../meals_type/jqgrid_all','post','',function (data) {
+            async('../cook_menu/jqgrid_all','post','',function (data) {
                 if (data.code == 0) {
                     jq_data = data.message;
-                    $("#meals_type").jqGrid('clearGridData');  //清空表格
-                    $("#meals_type").jqGrid('setGridParam',{  // 重新加载数据
+                    $("#cook_menu").jqGrid('clearGridData');  //清空表格
+                    $("#cook_menu").jqGrid('setGridParam',{  // 重新加载数据
                         datatype:'local',
                         data :jq_data, 
                     }).trigger("reloadGrid");
@@ -99,13 +103,6 @@ $(function () {
             });
         }
         get_jqgrid();
-        function alarmFormatter(cellvalue, options, rowdata)
-        {
-            if (cellvalue != "0")
-                return "<img src = 'meals_type/"+cellvalue+"' />";
-            else 
-                return '';
-        }
         // 执行修改操作
         function openEditModal (ids) {
             var idsLength = ids.length;
@@ -121,12 +118,28 @@ $(function () {
                 });
             } else {
                 //获取某一行的数据，并且进行赋值
-                var getIdRow = $("#meals_type").jqGrid("getRowData",ids);
+                var getIdRow = $("#cook_menu").jqGrid("getRowData",ids);
                 console.log(getIdRow);
                 $('#editModal').modal('show');
                 $("#editForm input[name='name']").val(getIdRow.name);
                 $("#editForm input[name='id']").val(getIdRow.id);
                 $("#editForm input[name='code']").val(getIdRow.code);
+                $("#editForm input[name='advice_price']").val(getIdRow.advice_price);
+                $("#editForm textarea[name='description']").val(getIdRow.description);
+                // 初始化餐厅下拉框内容
+                async('../cook_menu/get_meals_type','post','',function (data) {
+                    var meals_type_obj = document.getElementById('editForm').getElementsByTagName('select')[0];  
+                    meals_type_obj.innerHTML = '';        
+                    if (data.code == 0) {
+                        var data = data.message;
+                        create_options(meals_type_obj,data);
+                        for (var i = 0; i < meals_type_obj.length; i++) {
+                            if (meals_type_obj[i].value == getIdRow.meals_type_id) {
+                                meals_type_obj[i].setAttribute('selected',true);
+                            }          
+                        }
+                    }
+                })
                 load_upload(false);
                 $("#editButton").click(function () {
                     $("#editForm").submit();
@@ -136,20 +149,20 @@ $(function () {
                     onfocusout:false,// 是否在获取焦点时验证  
                     onkeyup :false,// 是否在敲击键盘时验证 
                     rules: {
+                        name: "required",
                         code: "required",
-                        meals_type_id: "required",
-                        meals_type_id: "required",
+                        advice_price:"required",
                     },
                     messages:{
-                        code:"窗口号不能为空",
-                        meals_type_id:"餐厅不能为空",
-                        meals_type_id:'楼层不能为空'
+                        name:"名称不能为空",
+                        code:"编号不能为空",
+                        advice_price:"建议价格不能为空"
                     },
                     submitHandler:function () {
                         // 表单提交之前进行序列化
                         var formData = $('#editForm').serialize();
                         // 初始化楼层下拉框内容
-                        async('../meals_type/update','post',formData,function (data) {
+                        async('../cook_menu/update','post',formData,function (data) {
                             
                             var message = data.message;
                             if (data.code == 0) {
@@ -206,7 +219,7 @@ $(function () {
                         idStr += obj+',';
                     })
                     console.log(idStr);
-                    async('../meals_type/delete','post',{ids:idStr},function (data) {
+                    async('../cook_menu/delete','post',{ids:idStr},function (data) {
                         var message = data.message;
                         if (data.code == 0) {
                             swal("删除成功！", "您已经永久删除了这条信息。", "success");
@@ -222,6 +235,15 @@ $(function () {
         // 执行添加操作
         function openAddModal () {
             $('#addModal').modal('show');
+            // 初始化餐厅下拉框内容
+            async('../cook_menu/get_meals_type','post','',function (data) {
+                var meals_type_obj = document.getElementById('addForm').getElementsByTagName('select')[0];  
+                meals_type_obj.innerHTML = '';        
+                if (data.code == 0) {
+                    var data = data.message;
+                    create_options(meals_type_obj,data);
+                }
+            })
             load_upload(true);
             $("#addButton").click(function () {
                 $("#addForm").submit();
@@ -232,17 +254,19 @@ $(function () {
                 onkeyup :false,// 是否在敲击键盘时验证 
                 rules: {
                     name: "required",
-                    code: "required"
+                    code: "required",
+                    advice_price:"required",
                 },
                 messages:{
                     name:"名称不能为空",
-                    code:"编号不能为空"
+                    code:"编号不能为空",
+                    advice_price:"建议价格不能为空"
                 },
                 submitHandler:function () {
                     // 表单提交之前进行序列化
                     var formData = $('#addForm').serialize();
-                    // console.log(formData);
-                    async('../meals_type/add','post',formData,function (data) {
+                    console.log(formData);
+                    async('../cook_menu/add','post',formData,function (data) {
                         var message = data.message;
                         if (data.code == 0) {
                             swal({

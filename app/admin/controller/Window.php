@@ -20,7 +20,7 @@ class Window extends Base
 {
     private $sql = " SELECT a.*,CONCAT(b.`name`,'-',c.`name`,'-',a.`code`,'号窗口') AS name_info,
                     b.`name` AS dinner_name,b.address AS dinner_address,c.`name` AS floor_name 
-                    FROM window a LEFT JOIN dinner b ON a.dinner_id = b.id LEFT JOIN floor c ON a.floor_id = c.id ";
+                    FROM window a LEFT JOIN dinner b ON a.dinner_id = b.id LEFT JOIN floor c ON a.floor_id = c.id ORDER BY name_info asc";
     
     // 渲染页面
     public function index ()
@@ -87,10 +87,10 @@ class Window extends Base
     {
         $id = '';
         $window = Db::name('window');
-        
+
         // 判断是否为添加并且检测id是否合法
+        $id = $this -> request -> post('id');        
         if($is_add === false) {
-            $id = $this -> request -> post('id');
             if(Common::check_id($window,$id) === true) {
                 $data['id'] = $id;
             } else {
@@ -136,7 +136,11 @@ class Window extends Base
 
         // 新增数据
         if ($is_add === true) {
-            $data['id'] = Base::guid();
+            if (Common::check_empty($id) === true) {
+                return Base::echo_error(Error::ID_IS_EMPTY);
+            } else {
+                $data['id'] = $id;
+            }
             if ($window -> insert($data) == 1) {
                 return Base::echo_success(Error::ADD_SUCCESS);
             } else {

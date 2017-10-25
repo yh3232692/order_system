@@ -23,8 +23,29 @@
         const IP_NOT_EXIST = "ip不存在";
         const DINNER_ID_NOT_EXIST = "餐厅id不存在";
         const DINNER_ID_IS_EMPTY = "餐厅id不能为空";
+        const WINDOW_ID_NOT_EXIST = "窗口id不存在";
+        const WINDOW_ID_IS_EMPTY = "窗口id不能为空";
+        const COOK_MENU_ID_NOT_EXIST = "菜单id不存在";
+        const COOK_MENU_ID_IS_EMPTY = "菜单id不能为空";
         const FLOOR_ID_NOT_EXIST = "楼层id不存在";
         const FLOOR_ID_IS_EMPTY = "楼层id不能为空";
+        const UPLOAD_SUCCESS = "图片上传成功";
+        const UPLOAD_ERROR = "图片上传失败";
+        const PRICE_IS_EMPTY = "价格不能为空";
+        const MAX_NUMBER_IS_EMPTY = "最大出售数量不能能为空";
+        const IS_HALF_IS_EMPTY = "是否可以出售半分不能为空";
+        const MEALS_TYPE_ID_NOT_EXIST = "菜品类型id不存在";
+        const MEALS_TYPE_ID_IS_EMPTY = "菜品类型id不能为空";
+        const MEALS_TIME_ID_IS_EMPTY = "所属时间段不能为空";
+        const PLAN_NUMBER_IS_EMPTY = "计划售出数量不能为空";
+        const END_TIME_IS_EMPTY = "结束时间不能为空";
+        const START_TIME_IS_EMPTY = "开始时间不能为空";
+        const HALF_PRICE_IS_EMPTY = "半价不能为空";
+        const DATA_LENGTH_ERROR = "数据数量错误";
+        const STUDENT_ID_IS_EMPTY = "学生id不能为空";
+        const DATE_IS_EMPTY = "日期不能为空";
+        const ORDER_CANCEL_SUCCESS = "取消预定成功";
+        const ORDER_ID_NOT_EXIST = "订单不存在";
     }
 ?>
 

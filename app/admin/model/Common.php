@@ -15,6 +15,7 @@ use think\Db;
 use think\Request;
 use app\common\Base;
 use app\common\Error;
+
 class Common extends Model
 {
     public static function check_empty($var) {
@@ -107,6 +108,12 @@ class Common extends Model
             return true;
         }
     }
+
+     
+
+    
+
+
 
     
 }

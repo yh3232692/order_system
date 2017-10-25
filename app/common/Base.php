@@ -13,6 +13,7 @@ namespace app\common;
 use think\Controller;
 use think\Db;
 use think\Request;
+use think\Env;
 class Base extends Controller 
 {
 
@@ -46,6 +47,13 @@ class Base extends Controller
             "message"   => $message
         ];
         return json_encode($row,JSON_UNESCAPED_UNICODE);
+    }
+
+    // 连接mongodb数据库
+    public static function connect_mongodb($dbname) 
+    {
+        $m = new \MongoClient (Env::get('mongo_db'));
+        return $m -> selectDB($dbname);
     }
 
     // 自动生成guid的方法
