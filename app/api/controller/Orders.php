@@ -200,10 +200,11 @@ class Orders extends Base
         $orderArr = json_decode($this -> request -> post('order_json'),true);
         
         // 连接mongodb数据库
-        $dbname = 'order_system';
+        $dbname = 'order_system_'.date('Y');
         $db = Base::connect_mongodb($dbname);
         // 连接表
         $collection = $db -> selectCollection(md5($orderArr['window_id']));
+
         // 取到当前窗口所有订单
         $new_arr = $orderArr['rows'];
         // 如果this -> idArr已经存在数据，说明有未删除的数据，先进行删除
@@ -213,6 +214,7 @@ class Orders extends Base
                 $collection -> remove(array('_id' => $order_id));
             }  
         }
+
         // 如果接收过来的新数据大于限制条数则不能添加
         if (count($new_arr) > 5) {
             return Base::echo_error(Error::DATA_LENGTH_ERROR);
@@ -232,23 +234,9 @@ class Orders extends Base
                 return Base::echo_error(Error::ADD_ERROR);
             }
         }
-
+        // 添加成功删除添加成功的id
         $this -> idArr = [];
         return Base::echo_success(Error::ADD_SUCCESS);
-    }
-
-    public function test () 
-    {
-        // 连接mongodb数据库
-        $dbname = 'order_system';
-        $db = Base::connect_mongodb($dbname);
-        // 连接表
-        $collection = $db -> selectCollection(md5('1'));
-        $cursor = $collection -> find();
-        $row = [];
-        foreach ($cursor as $key => $doc) {
-            $row[] = $doc;
-        }   
     }
 
     // 预定机预定订单的接口
@@ -292,9 +280,9 @@ class Orders extends Base
         //     ]
         // ];
         // echo json_encode($orderArr);
-        $orderArr = json_decode($this -> request -> post('order_json'),true);
+        // $orderArr = json_decode($this -> request -> post('order_json'),true);
         // 连接mongodb数据库
-        $dbname = 'order_system';
+        $dbname = 'order_reserve_'.date('Y');
         $db = Base::connect_mongodb($dbname);
         // 连接表
         $collection = $db -> selectCollection(md5($orderArr['window_id']));
@@ -337,18 +325,84 @@ class Orders extends Base
         }
 
         // 连接mongodb数据库
-        $dbname = 'order_system';
+        $dbname = 'order_reserve_'.date('Y');
         $db = Base::connect_mongodb($dbname);
         // 连接表
         $collection = $db -> selectCollection(md5($window_id));
+        
+        // 组织查询条件
         $query = array("date" => $date,"student_id" => $student_id,"meals_time_id" => $meals_time_id);
         $result = $collection -> findOne($query);
+
         if (count($result) > 0) {
             $res = $collection -> remove($query);
             return Base::echo_success(Error::ORDER_CANCEL_SUCCESS);
         } else {
             return Base::echo_error(Error::ORDER_ID_NOT_EXIST);
         }
+    }
+
+    // 查询预定订单是否存在
+    public function reserve_is_exist () 
+    {
+        // 检测学生id是否合法
+        $student_id = $this -> request -> post('student_id');
+        if (Common::check_empty($student_id) === true) {
+            return Base::echo_error(Error::STUDENT_ID_IS_EMPTY);
+        }
+
+        // 检测日期是否空
+        $date = $this -> request -> post('date');
+        if (Common::check_empty($date) === true) {
+            return Base::echo_error(Error::DATE_IS_EMPTY);
+        }
+
+        // 检测预定哪一餐的id不能为空
+        $meals_time_id = $this -> request -> post('meals_time_id');
+        if (Common::check_empty($meals_time_id) === true) {
+            return Base::echo_error(Error::MEALS_TIME_ID_IS_EMPTY);
+        }
+        $meals_time_id = intval($meals_time_id);
+
+        //检测window_id是否合法
+        $window_id = $this -> request -> post('window_id');
+        if (Common::check_empty($window_id) === true) {
+            return Base::echo_error(Error::WINDOW_ID_IS_EMPTY);
+        }
+
+        // 连接mongodb数据库
+        $dbname = 'order_reserve_'.date('Y');
+        $db = Base::connect_mongodb($dbname);
+        // 连接表
+        $collection = $db -> selectCollection(md5($window_id));
+        
+        // 组织查询条件
+        $query = array("date" => $date,"student_id" => $student_id,"meals_time_id" => $meals_time_id);
+        $result = $collection -> findOne($query);
+        return $result;
+    }
+
+    // 是否预定的接口
+    public function is_reserve() 
+    {
+        $result = $this -> reserve_is_exist();
+        if (count($result) > 0) {
+            return Base::echo_error(Error::ORDER_IS_RESERVE);
+        }
+        return Base::echo_success(Error::YOU_CAN_RESERVE);
+    }
+
+    // 查询学生预定的订单
+    public function show_student_reserve() 
+    {
+        $result = $this -> reserve_is_exist();
+        if (count($result) > 0) {
+            return Base::echo_success($result);
+        }
+        if ($result === false) {
+            return Base::echo_error(Error::DB_ERROR);
+        }
+        return Base::echo_error(Error::ORDER_ID_NOT_EXIST);
     }
 
  }

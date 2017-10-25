@@ -234,7 +234,7 @@ class Garnish extends Base
 
         $ids = $this -> request -> post('ids');
         if (Common::check_empty($ids)) {
-            Base::echo_error(Error::ARGUMENT_ERROR);
+            return Base::echo_error(Error::ARGUMENT_ERROR);
         }
         $ids = substr($ids,0,-1);
         $idArr = explode(',',$ids);

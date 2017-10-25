@@ -10,6 +10,7 @@
         const DELETE_SUCCESS = "删除数据成功";
         const DELETE_ERROR = "删除数据失败";
         const ARGUMENT_ERROR = "参数错误";
+        const ARGUMENT_IS_EMPTY = "参数不能为空";
         const DB_ERROR = "数据库操作失败";
         const ID_NOT_EXIST = "ID不存在";
         const ID_ALREADY_EXIST = "ID已经存在";
@@ -27,6 +28,7 @@
         const WINDOW_ID_IS_EMPTY = "窗口id不能为空";
         const COOK_MENU_ID_NOT_EXIST = "菜单id不存在";
         const COOK_MENU_ID_IS_EMPTY = "菜单id不能为空";
+        const COOK_MENU_IS_EXIST = "当前菜品在本窗口已经存在";
         const FLOOR_ID_NOT_EXIST = "楼层id不存在";
         const FLOOR_ID_IS_EMPTY = "楼层id不能为空";
         const UPLOAD_SUCCESS = "图片上传成功";
@@ -46,6 +48,9 @@
         const DATE_IS_EMPTY = "日期不能为空";
         const ORDER_CANCEL_SUCCESS = "取消预定成功";
         const ORDER_ID_NOT_EXIST = "订单不存在";
+        const ORDER_IS_RESERVE = "已经预定";
+        const YOU_CAN_RESERVE = "可以预定";
+        const ADJUST_TIME_IS_EMPTY = "调菜时间不能为空";
     }
 ?>
 
