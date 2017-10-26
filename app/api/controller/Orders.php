@@ -205,7 +205,7 @@ class Orders extends Base
         // 连接表
         $collection = $db -> selectCollection(md5($orderArr['window_id']));
 
-        // 取到当前窗口所有订单
+        // 取到当前窗口订单
         $new_arr = $orderArr['rows'];
         // 如果this -> idArr已经存在数据，说明有未删除的数据，先进行删除
         if (count($this -> idArr) > 0) {
@@ -343,7 +343,7 @@ class Orders extends Base
     }
 
     // 查询预定订单是否存在
-    public function reserve_is_exist () 
+    protected function reserve_is_exist () 
     {
         // 检测学生id是否合法
         $student_id = $this -> request -> post('student_id');

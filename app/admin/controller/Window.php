@@ -20,7 +20,7 @@ class Window extends Base
 {
     private $sql = " SELECT a.*,CONCAT(b.`name`,'-',c.`name`,'-',a.`code`,'号窗口') AS name_info,
                     b.`name` AS dinner_name,b.address AS dinner_address,c.`name` AS floor_name 
-                    FROM window a LEFT JOIN dinner b ON a.dinner_id = b.id LEFT JOIN floor c ON a.floor_id = c.id ORDER BY name_info asc";
+                    FROM window a LEFT JOIN dinner b ON a.dinner_id = b.id LEFT JOIN floor c ON a.floor_id = c.id ";
     
     // 渲染页面
     public function index ()
@@ -196,16 +196,16 @@ class Window extends Base
         } 
         
         if ($dinner_id == 0 && $floor_id == 0) {
-            $result = $window -> query($this -> sql);
+            $result = $window -> query($this -> sql."ORDER BY name_info asc");
         } 
         if ($dinner_id != 0 && $floor_id != 0) {
-            $result = $window -> query($this -> sql."WHERE b.id = {$dinner_id} AND c.id = {$floor_id}");
+            $result = $window -> query($this -> sql."WHERE b.id = '{$dinner_id}' AND c.id = '{$floor_id}' ORDER BY name_info asc");
         }
         if ($dinner_id == 0 && $floor_id != 0) {
-            $result = $window -> query($this -> sql."WHERE c.id = {$floor_id}");
+            $result = $window -> query($this -> sql."WHERE c.id = '{$floor_id}' ORDER BY name_info asc");
         }
         if ($dinner_id != 0 && $floor_id == 0) {
-            $result = $window -> query($this -> sql."WHERE b.id = {$dinner_id}");
+            $result = $window -> query($this -> sql."WHERE b.id = '{$dinner_id}' ORDER BY name_info asc");
         }
         if ($result === false) {
             return Base::echo_error(Error::DB_ERROR);
@@ -218,7 +218,7 @@ class Window extends Base
 
         $ids = $this -> request -> post('ids');
         if (Common::check_empty($ids)) {
-            Base::echo_error(Error::ARGUMENT_ERROR);
+            return Base::echo_error(Error::ARGUMENT_ERROR);
         }
         $ids = substr($ids,0,-1);
         $idArr = explode(',',$ids);

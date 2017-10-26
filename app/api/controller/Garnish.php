@@ -45,13 +45,14 @@ class Garnish extends Base
         foreach ($del_row as $key => $value) {
             $garnish -> where('id','=',"{$value['id']}") -> delete();
         }
-        $result = $garnish -> query($this -> sql."WHERE b.id = '$window_id'");
+        $result = $garnish -> query($this -> sql."WHERE b.id = '$window_id' AND '$date' >= a.start_time AND '$date' <= a.end_time");
         
         if ($result === false) {
             return Base::echo_error(Error::DB_ERROR);
         }
         return $this -> echo_success ($result);
     }
+    
      // 检测窗口id
      protected function check_window_id ($window_id) 
      {

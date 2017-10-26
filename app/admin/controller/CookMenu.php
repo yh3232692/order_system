@@ -64,7 +64,7 @@ class CookMenu extends Base
     protected function check_meals_type_id ($meals_type_id) 
     {
         $dbname = Db::name('meals_type');
-        if(Common::check_empty($meals_type_id)) {
+        if(Common::check_empty($meals_type_id) === true) {
             return Base::echo_error(Error::MEALS_TYPE_ID_IS_EMPTY);
         }
         $row = $dbname -> where("id",'=',"$meals_type_id") -> select();
@@ -182,7 +182,7 @@ class CookMenu extends Base
     {
         $ids = $this -> request -> post('ids');
         if (Common::check_empty($ids)) {
-            Base::echo_error(Error::ARGUMENT_ERROR);
+           return Base::echo_error(Error::ARGUMENT_ERROR);
         }
         $ids = substr($ids,0,-1);
         $idArr = explode(',',$ids);

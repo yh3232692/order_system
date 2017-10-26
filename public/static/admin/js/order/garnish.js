@@ -42,7 +42,7 @@ $(function () {
             sortname : 'SYS_RES_ID',        // 默认的查询排序字段  
             viewrecords : true,             // 定义是否在导航条上显示总的记录数  
             autowidth : true,               //定义表格是否自适应宽度
-            caption: "窗口详情展示",      //定义表格的标题
+            caption: "配菜详情展示",      //定义表格的标题
             height:h-200,
             hidegrid: true,                 //定义是否可以显示隐藏表格
             onSelectRow:function (rowid,status) {
